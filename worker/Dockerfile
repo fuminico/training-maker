@@ -1,0 +1,27 @@
+# ワーカー用Dockerfile
+FROM node:20-alpine
+
+# Install ffmpeg
+RUN apk add --no-cache ffmpeg
+
+# Working directory
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+COPY tsconfig.json ./
+
+# Install dependencies
+RUN npm ci --only=production
+
+# Copy source code
+COPY src ./src
+
+# Build TypeScript
+RUN npm run build
+
+# Expose port
+EXPOSE 3001
+
+# Start worker
+CMD ["npm", "start"]
