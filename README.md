@@ -153,6 +153,39 @@ npm run dev
 - `POST /api/projects` - 新規プロジェクト作成
 - `GET /api/projects/:projectId` - プロジェクト詳細
 - `PATCH /api/projects/:projectId` - プロジェクト更新
+- `POST /api/projects/:projectId/pptx/upload-url` - PPTXアップロード用署名付きURL生成
+- `POST /api/projects/:projectId/parse` - PPTX解析ジョブ起動
+
+### スライド
+
+- `GET /api/projects/:projectId/slides` - スライド一覧
+- `GET /api/projects/:projectId/slides/:slideId` - スライド詳細
+- `PATCH /api/projects/:projectId/slides/:slideId` - スライド更新
+- `POST /api/projects/:projectId/slides/recalc-time` - 推定時間再計算
+
+### 音声設定・生成
+
+- `GET /api/projects/:projectId/audio-settings` - 音声設定取得
+- `PATCH /api/projects/:projectId/audio-settings` - 音声設定更新
+- `POST /api/projects/:projectId/audio/generate` - 音声生成ジョブ起動
+
+### 動画生成
+
+- `POST /api/projects/:projectId/video/generate` - 動画生成ジョブ起動
+- `GET /api/projects/:projectId/video` - 動画情報取得
+- `GET /api/projects/:projectId/video/download-url` - 動画ダウンロード用URL取得
+
+### ジョブ管理
+
+- `GET /api/projects/:projectId/jobs` - プロジェクトのジョブ一覧
+- `GET /api/jobs/:jobId` - ジョブ詳細
+
+### 管理者用
+
+- `GET /api/admin/dashboard` - ダッシュボードサマリ
+- `GET /api/admin/users` - ユーザー一覧
+- `PATCH /api/admin/users/:userId` - ユーザー更新
+- `GET /api/admin/logs` - ログ一覧
 
 ## 開発ロードマップ
 
@@ -162,29 +195,29 @@ npm run dev
 - [x] 基本的な認証フロー
 - [x] プロジェクト管理APIの実装
 
-### Phase 2: PPTX処理とスライド管理（進行中）
-- [ ] PPTX アップロード機能
-- [ ] メディア処理ワーカーの基本実装
-- [ ] PPTX 解析処理
-- [ ] スライド一覧表示と原稿編集機能
+### Phase 2: PPTX処理とスライド管理 ✅
+- [x] PPTX アップロード機能
+- [x] メディア処理ワーカーの基本実装
+- [x] PPTX 解析処理
+- [x] スライド一覧表示と原稿編集機能
 
-### Phase 3: TTS統合と音声生成
-- [ ] TTS プロバイダの抽象化レイヤー
-- [ ] 音声生成ジョブの実装
-- [ ] プロジェクト/スライド単位の音声設定管理
-- [ ] 音声プレビュー機能
+### Phase 3: TTS統合と音声生成 ✅
+- [x] TTS プロバイダの抽象化レイヤー
+- [x] 音声生成ジョブの実装
+- [x] プロジェクト/スライド単位の音声設定管理
+- [x] 音声API統合
 
-### Phase 4: 動画生成
-- [ ] ffmpeg を使った動画合成処理
-- [ ] 動画生成ジョブの実装
-- [ ] 動画ダウンロード機能
-- [ ] 進捗表示の実装
+### Phase 4: 動画生成 ✅
+- [x] ffmpeg を使った動画合成処理
+- [x] 動画生成ジョブの実装
+- [x] 動画ダウンロード機能
+- [x] 進捗表示の実装
 
-### Phase 5: 管理機能と最適化
-- [ ] 管理者ダッシュボード
-- [ ] ユーザー管理機能
-- [ ] ログ・監視機能
-- [ ] パフォーマンス最適化
+### Phase 5: 管理機能と最適化 ✅
+- [x] 管理者ダッシュボード
+- [x] ユーザー管理機能
+- [x] ログ・監視機能
+- [x] 基本UIコンポーネント
 
 ## ライセンス
 
