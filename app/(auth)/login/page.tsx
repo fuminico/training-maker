@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import Link from 'next/link'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -114,15 +115,37 @@ export default function LoginPage() {
               </div>
               <div className="relative flex justify-center text-sm">
                 <span className="bg-white px-2 text-gray-500">
-                  開発モード
+                  アカウントをお持ちでない方
                 </span>
               </div>
             </div>
 
             <div className="mt-6 text-center">
-              <p className="text-xs text-gray-500">
-                Supabase未設定の場合は、認証をスキップしてダッシュボードにアクセスできます
-              </p>
+              <Link
+                href="/signup"
+                className="font-medium text-indigo-600 hover:text-indigo-500"
+              >
+                アカウント作成はこちら
+              </Link>
+            </div>
+
+            <div className="mt-6">
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-300" />
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="bg-white px-2 text-gray-500">
+                    開発モード
+                  </span>
+                </div>
+              </div>
+
+              <div className="mt-4 text-center">
+                <p className="text-xs text-gray-500">
+                  Supabase未設定の場合は、認証をスキップしてダッシュボードにアクセスできます
+                </p>
+              </div>
             </div>
           </div>
         </div>
