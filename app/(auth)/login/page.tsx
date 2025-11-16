@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
@@ -10,15 +10,29 @@ export default function LoginPage() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [isConfigured, setIsConfigured] = useState(true)
   const router = useRouter()
-  const supabase = createClient()
+
+  useEffect(() => {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+    if (!supabaseUrl || supabaseUrl === 'your-project-url.supabase.co') {
+      setIsConfigured(false)
+    }
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    if (!isConfigured) {
+      setError('Supabaseが設定されていません。.env.localファイルを確認してください。')
+      return
+    }
+
     setError('')
     setLoading(true)
 
     try {
+      const supabase = createClient()
       const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -30,7 +44,6 @@ export default function LoginPage() {
         return
       }
 
-      // ログイン成功後、ダッシュボードにリダイレクト
       router.push('/projects')
       router.refresh()
     } catch (err) {
@@ -52,6 +65,20 @@ export default function LoginPage() {
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+          {!isConfigured && (
+            <div className="mb-4 rounded-md bg-yellow-50 p-4">
+              <div className="flex">
+                <div className="ml-3">
+                  <h3 className="text-sm font-medium text-yellow-800">Supabaseの設定が必要です</h3>
+                  <div className="mt-2 text-sm text-yellow-700">
+                    <p>.env.localファイルにSupabaseの認証情報を設定してください。</p>
+                    <p className="mt-1">設定後、開発サーバーを再起動してください。</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           {error && (
             <div className="mb-4 rounded-md bg-red-50 p-4">
               <p className="text-sm text-red-800">{error}</p>
@@ -73,7 +100,6 @@ export default function LoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                  placeholder="user@example.com"
                 />
               </div>
             </div>
@@ -92,7 +118,6 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                  placeholder="••••••••"
                 />
               </div>
             </div>
@@ -100,7 +125,7 @@ export default function LoginPage() {
             <div>
               <button
                 type="submit"
-                disabled={loading}
+                disabled={loading || !isConfigured}
                 className="flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? 'ログイン中...' : 'ログイン'}
@@ -110,41 +135,13 @@ export default function LoginPage() {
 
           <div className="mt-6">
             <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300" />
-              </div>
               <div className="relative flex justify-center text-sm">
                 <span className="bg-white px-2 text-gray-500">
-                  アカウントをお持ちでない方
+                  アカウントをお持ちでないですか？{' '}
+                  <Link href="/signup" className="font-medium text-indigo-600 hover:text-indigo-500">
+                    アカウント作成
+                  </Link>
                 </span>
-              </div>
-            </div>
-
-            <div className="mt-6 text-center">
-              <Link
-                href="/signup"
-                className="font-medium text-indigo-600 hover:text-indigo-500"
-              >
-                アカウント作成はこちら
-              </Link>
-            </div>
-
-            <div className="mt-6">
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-gray-300" />
-                </div>
-                <div className="relative flex justify-center text-sm">
-                  <span className="bg-white px-2 text-gray-500">
-                    開発モード
-                  </span>
-                </div>
-              </div>
-
-              <div className="mt-4 text-center">
-                <p className="text-xs text-gray-500">
-                  Supabase未設定の場合は、認証をスキップしてダッシュボードにアクセスできます
-                </p>
               </div>
             </div>
           </div>
